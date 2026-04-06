@@ -1,0 +1,47 @@
+name: officeflow-openenv
+version: "1.0"
+description: >
+  OfficeFlow is an OpenEnv environment that simulates an office workflow.
+  An AI agent manages emails, calendar meetings, and tasks with deadlines
+  over a limited number of steps per episode.
+
+environment:
+  module: env.office_env
+  class: OfficeEnv
+  max_steps: 20
+
+observation:
+  schema: env.models.Observation
+  fields:
+    - state: OfficeState
+    - last_action_result: str
+    - available_actions: list[str]
+
+action:
+  schema: env.models.Action
+  types:
+    - read_email
+    - classify_email
+    - reply_email
+    - schedule_meeting
+    - resolve_conflict
+    - add_task
+    - complete_task
+    - ignore_email
+
+reward:
+  schema: env.models.Reward
+  range: [-inf, +inf]
+  notes: >
+    Positive rewards for correct classifications, replying urgent emails,
+    completing high-priority tasks, and resolving conflicts.
+    Negative rewards for ignoring urgent emails, replying spam, or
+    scheduling conflicting meetings.
+
+episode:
+  termination: max_steps_reached
+  scoring: cumulative_reward + final_bonus
+
+inference:
+  entry_point: inference.py
+  function: run_episode

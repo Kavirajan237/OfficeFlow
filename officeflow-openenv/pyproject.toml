@@ -1,0 +1,15 @@
+[project]
+name = "officeflow-openenv"
+version = "0.1.0"
+description = "Office workflow OpenEnv environment for AI agents"
+authors = [{ name = "Kavirajan" }]
+dependencies = [
+    "pydantic",
+    "openenv-core>=0.2.0",
+    "openai",
+    "fastapi",
+    "uvicorn"
+]
+
+[project.scripts]
+server = "server.app:main"
